@@ -31,7 +31,7 @@ public class Customer implements Serializable {
 	protected Customer() {
 	}
 
-	protected Customer(Integer customerId, String name, String credit, String address, String emailId, String phone) {
+	public Customer(Integer customerId, String name, String credit, String address, String emailId, String phone) {
 		this.customerId = customerId;
 		this.name = name;
 		this.credit = credit;

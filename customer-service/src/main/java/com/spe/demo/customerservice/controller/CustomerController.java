@@ -1,6 +1,10 @@
 package com.spe.demo.customerservice.controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -10,43 +14,60 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.spe.demo.customerservice.domain.model.Customer;
 import com.spe.demo.customerservice.service.CustomerService;
 
 @RestController
-@RequestMapping(value = "/customer")
+@RequestMapping(value = "/customers")
 public class CustomerController {
 	@Autowired
 	CustomerService customerService;
-
-	@GetMapping("{customerId}")
-	Customer getCustomerByID(@PathVariable("customerId") final int customerId) {
-		return customerService.getCustomerById(customerId);
-	}
 
 	@GetMapping
 	Iterable<Customer> getAllCustomers() {
 		return customerService.getAllCustomer();
 	}
 
-	@PostMapping
-	Customer saveCustomer(@RequestBody Customer customer) {
-		return customerService.saveCustomer(customer);
+	@GetMapping(path = "/{customerId}")
+	Customer getCustomerByID(@PathVariable final int customerId) {
+		return customerService.getCustomerById(customerId);
+
 	}
 
-	@PutMapping
-	Customer updateCustomer(@RequestBody Customer customer) {
-		return customerService.saveCustomer(customer);
+	@PostMapping
+	ResponseEntity<?> saveCustomer(@RequestBody Customer customer) {
+		Customer createdCustomer = customerService.saveCustomer(customer);
+
+		if (createdCustomer == null) {
+			return ResponseEntity.noContent().build();
+		}
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(customer.getCustomerId()).toUri();
+		return ResponseEntity.created(location).build();
+	}
+
+	@PutMapping(path = "/{customerId}")
+	ResponseEntity<?> updateCustomer(@PathVariable("customerId") final int customerId, @RequestBody Customer customer) {
+		Customer existingCustomer = customerService.getCustomerById(customerId);
+		if (existingCustomer == null) {
+			return ResponseEntity.notFound().build();
+		}
+		customerService.saveCustomer(customer);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@PatchMapping("/{customerId}")
-	Customer updateCustomer(@PathVariable("customerId") final int customerId, @RequestBody Customer customer) {
+	ResponseEntity<?> updateCustomerDetails(@PathVariable("customerId") final int customerId,
+			@RequestBody Customer customer) {
 		Customer existingCustomer = customerService.getCustomerById(customerId);
 		if (existingCustomer == null) {
-			return null;
+			ResponseEntity.notFound().build();
 		}
-		return customerService.saveCustomer(customer);
+		customerService.saveCustomer(customer);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@DeleteMapping("/{customerId}")

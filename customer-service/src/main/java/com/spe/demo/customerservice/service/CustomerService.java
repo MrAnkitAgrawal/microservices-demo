@@ -20,6 +20,9 @@ public class CustomerService {
 	
 	public Customer getCustomerById(final int customerId) {
 		Optional<Customer> customer = customerRepository.findById(customerId);
+		if(customer == null) {
+			return null;
+		}
 		return customer.get();
 	}
 	
