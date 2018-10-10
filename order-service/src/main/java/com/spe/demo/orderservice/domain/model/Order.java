@@ -1,8 +1,7 @@
 package com.spe.demo.orderservice.domain.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +26,7 @@ public class Order implements Serializable {
 	private Integer itemUnits;
 	
 	@Column(name="order_date")
-	private Date orderDate;
+	private LocalDateTime orderDate;
 	
 	@Column(name="order_status")
 	private OrderStatus orderStatus;
@@ -35,9 +34,8 @@ public class Order implements Serializable {
 	protected Order() {
 	}
 
-	public Order(Integer orderId, Integer customerId, Integer itemCode, Integer itemUnits, Date orderDate,
+	public Order(Integer customerId, Integer itemCode, Integer itemUnits, LocalDateTime orderDate,
 			OrderStatus orderStatus) {
-		this.orderId = orderId;
 		this.customerId = customerId;
 		this.itemCode = itemCode;
 		this.itemUnits = itemUnits;
@@ -77,11 +75,11 @@ public class Order implements Serializable {
 		this.itemUnits = itemUnits;
 	}
 
-	public Date getOrderDate() {
+	public LocalDateTime getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(LocalDateTime orderDate) {
 		this.orderDate = orderDate;
 	}
 

@@ -4,27 +4,32 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="catalog_details", catalog="db_catalog")
 public class Catalog implements Serializable {
 	@Id
 	@Column(name="item_code")
+	@NotNull
 	private Integer itemCode;
 	
 	@Column(name="item_name", unique=true, length=20)
+	@NotNull
 	private String itemName;
 	
 	@Column(name="description", length=50)
 	private String description;
 	
 	@Column(name="item_price", precision=2)
+	@Min(value=0, message="Price cannot be negative")
 	private float price;
 	
 	@Column(name="inventory")
+	@Min(value=0, message="Inventory cannot be negative")
 	private int inventory;
 	
 	protected Catalog() {
