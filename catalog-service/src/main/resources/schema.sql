@@ -1,4 +1,4 @@
-CREATE TABLE catalog_details(
+CREATE TABLE IF NOT EXISTS catalog_details(
 	item_code BIGINT PRIMARY KEY,
 	item_name VARCHAR(20) UNIQUE,
 	description VARCHAR(50),
