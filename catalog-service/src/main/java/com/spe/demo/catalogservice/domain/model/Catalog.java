@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 public class Catalog implements Serializable {
 	@Id
 	@Column(name="item_code")
-	@NotNull
 	private Integer itemCode;
 	
 	@Column(name="item_name", unique=true, length=20)
