@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.spe.demo.orderservice.domain.model.Order;
 import com.spe.demo.orderservice.services.OrderService;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 @RestController()
 public class OrderController {
@@ -27,11 +32,14 @@ public class OrderController {
 	}
 
 	@GetMapping(path = "/customers/{customerId}/orders/{orderId}")
-	public Order getOrdersById(@PathVariable int customerId, @PathVariable int orderId) {
+	public Resource<Order> getOrdersById(@PathVariable int customerId, @PathVariable int orderId) {
 		List<Order> customerOrderList = orderService.getOrdersByCustomerId(customerId);
 		for (Order order : customerOrderList) {
 			if (order.getOrderId().equals(orderId)) {
-				return order;
+				Resource<Order> orderResource = new Resource<>(order);
+				ControllerLinkBuilder link = linkTo(methodOn(this.getClass()).getOrdersByCustomerId(customerId));
+				orderResource.add(link.withRel("parent"));
+				return orderResource;
 			}
 		}
 		return null;
