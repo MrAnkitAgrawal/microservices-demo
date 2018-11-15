@@ -6,14 +6,21 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "customer_details")
 public class Customer implements Serializable {
 	@Id
+	@Min(value=1, message="Cutomer ID must be > 0")
 	private Integer customerId;
 
 	@Column(name = "customer_name")
+	@NotNull
+	@Size(min=8, max=25, message="customer name size must be between 8 to 25")
 	private String name;
 
 	@Column(name = "customer_credit")

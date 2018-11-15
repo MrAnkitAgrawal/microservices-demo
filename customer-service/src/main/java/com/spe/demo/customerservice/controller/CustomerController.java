@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -55,7 +57,7 @@ public class CustomerController {
 	}
 
 	@PostMapping
-	ResponseEntity<?> saveCustomer(@RequestBody Customer customer) {
+	ResponseEntity<?> saveCustomer(@RequestBody @Valid Customer customer) {
 		Customer createdCustomer = customerService.saveCustomer(customer);
 
 		if (createdCustomer == null) {
