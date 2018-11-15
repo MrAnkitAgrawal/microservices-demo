@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.spe.demo.customerservice.domain.model.Customer;
@@ -26,12 +28,12 @@ public class CustomerService {
 		return customer.get();
 	}
 	
-	public List<Customer> getCustomerByName(final String customerName) {
-		return customerRepository.findByName(customerName);
+	public Page<Customer> getCustomerByName(final String customerName, Pageable pageable) {
+		return customerRepository.findByName(customerName, pageable);
 	}
 	
-	public Iterable<Customer> getAllCustomer() {
-		return customerRepository.findAll();
+	public Page<Customer> getAllCustomer(Pageable pageable) {
+		return customerRepository.findAll(pageable);
 	}
 	
 	public Customer saveCustomer(Customer customer) {

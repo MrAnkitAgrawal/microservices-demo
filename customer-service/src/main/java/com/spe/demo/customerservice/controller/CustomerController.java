@@ -1,8 +1,16 @@
 package com.spe.demo.customerservice.controller;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,16 +32,26 @@ import com.spe.demo.customerservice.service.CustomerService;
 public class CustomerController {
 	@Autowired
 	CustomerService customerService;
+	@Autowired
+	CustomerAssembler customerAssembler;
 
+	/*@GetMapping
+	Page<CustomerDTO> getAllCustomers(Pageable pageable) {
+		Page<Customer> customerListPage = customerService.getAllCustomer(pageable);
+		List<CustomerDTO> customerDTOList = customerListPage.getContent().stream().map(customer -> customerAssembler.toResource(customer)).collect(Collectors.toList());
+		
+		return new PageImpl<CustomerDTO>(customerDTOList, pageable, customerListPage.getTotalPages());
+	}*/
+	
 	@GetMapping
-	Iterable<Customer> getAllCustomers() {
-		return customerService.getAllCustomer();
+	PagedResources<CustomerDTO> getAllCustomers(Pageable pageable, PagedResourcesAssembler<Customer> pagedAssembler) {
+		Page<Customer> customerListPage = customerService.getAllCustomer(pageable);
+		return pagedAssembler.toResource(customerListPage, customerAssembler);
 	}
 
 	@GetMapping(path = "/{customerId}")
-	Customer getCustomerByID(@PathVariable final int customerId) {
-		return customerService.getCustomerById(customerId);
-
+	CustomerDTO getCustomerByID(@PathVariable final int customerId) {
+		return customerAssembler.toResource(customerService.getCustomerById(customerId));
 	}
 
 	@PostMapping
