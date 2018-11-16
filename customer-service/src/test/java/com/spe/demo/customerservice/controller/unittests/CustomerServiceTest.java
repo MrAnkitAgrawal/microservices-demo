@@ -7,8 +7,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.spe.demo.customerservice.service.CustomerService;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(value = CustomerService.class, secure = false)
+//@RunWith(SpringRunner.class)
+//@WebMvcTest(value = CustomerService.class, secure = false)
 public class CustomerServiceTest {
 	//@Mock
 	//CustomerRep customeServiceMock;

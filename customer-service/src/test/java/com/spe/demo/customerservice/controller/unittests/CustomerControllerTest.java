@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spe.demo.customerservice.controller.CustomerAssembler;
 import com.spe.demo.customerservice.controller.CustomerController;
 import com.spe.demo.customerservice.domain.model.Customer;
 import com.spe.demo.customerservice.service.CustomerService;
@@ -36,6 +37,10 @@ public class CustomerControllerTest {
 
 	@MockBean
 	private CustomerService customerService;
+	
+	@MockBean
+	CustomerAssembler customerAssembler;
+	
 
 	@Test
 	public void testGetAllCustomers() throws Exception {
@@ -56,6 +61,21 @@ public class CustomerControllerTest {
 		String expetced = new ObjectMapper().writeValueAsString(customerList);
 		String actual = result.getResponse().getContentAsString();
 
-		JSONAssert.assertEquals(expetced, actual, false);*/
+		JSONAssert.assertEquals(expetced, actual, false); */
+	}
+	
+	@Test
+	public void testSaveCustomer() throws Exception {
+		Customer customer = new Customer(0, "Ankit", "20000", "Lucknow", "ankit29.a@tcs.com", "7800619190");
+		String customerStr = new ObjectMapper().writeValueAsString(customer);
+		
+		when(customerService.saveCustomer(any())).thenReturn(customer);
+		
+		RequestBuilder requestBuilder = post("/customers").
+				content(customerStr).
+				contentType(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder)
+				.andExpect(status().is4xxClientError()).andReturn();
+				
 	}
 }
