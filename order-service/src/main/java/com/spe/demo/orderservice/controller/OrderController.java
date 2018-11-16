@@ -19,6 +19,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.spe.demo.orderservice.domain.model.Order;
 import com.spe.demo.orderservice.services.OrderService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ResponseHeader;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 @RestController()
@@ -48,6 +51,11 @@ public class OrderController {
 	//@PostMapping(path = "/customers/{customerId}/orders")
 	/*public ResponseEntity<?> createOrder(@PathVariable int customerId, @RequestParam(value = "itemCode") final int itemCode,
 			@RequestParam(value = "units") final int units) {*/
+	@ApiOperation(
+			value="Creates an Order for a customer by using Customer ID, Item Code and Quantity.",
+			notes="Creates an Order for a customer by using Customer ID, Item Code and Quantity.",
+			produces="Application/json"
+			)
 	@PostMapping(path = "/customers/{customerId}/orders")
 	public ResponseEntity<?> createOrder(@PathVariable int customerId, @RequestBody final Map<String, Integer> orderParam) {
 		try {
